@@ -1,95 +1,102 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import Meal from "@/components/MealDisplay";
+import { api } from "@/convex/_generated/api";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/joy";
+import { useMutation, useQuery } from "convex/react";
+import { useState } from "react";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 export default function Home() {
+  const [datetime, setDatetime] = useState(dayjs().startOf("day").valueOf());
+  const newMeal = useMutation(api.meals.newMeal);
+  const meals = useQuery(api.meals.getMealsForDate, {
+    datetime: datetime.valueOf(),
+    timezoneOffset: new Date().getTimezoneOffset(),
+  });
+
+  const handleNewMenu = () =>
+    // hard code to dinner
+    newMeal({
+      meal: {
+        datetime: dayjs(datetime)
+          .startOf("day")
+          .hour(19)
+          .minute(22)
+          .utc()
+          .valueOf(),
+        name: "Dinner",
+      },
+    });
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <Box
+      bgcolor={(theme) => theme.vars.palette.background.level1}
+      minHeight="100vh"
+    >
+      <Box
+        mr="auto"
+        py={1}
+        px={2}
+        sx={(theme) => ({ bgcolor: theme.vars.palette.background.surface })}
+      >
+        <Typography fontWeight="bold" textTransform="uppercase">
+          tΞp lates
+        </Typography>
+      </Box>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <Stack py={4} px={2} gap={4} maxWidth="65ch" m="auto">
+        <Stack direction="row">
+          <Typography level="h1" fontWeight="200">
+            {datetime === dayjs().startOf("day").valueOf()
+              ? "Today"
+              : dayjs(datetime).format("dddd, MMMM D, YYYY")}
+          </Typography>
+          <Box ml="auto" my="auto">
+            <ButtonGroup>
+              <IconButton
+                onClick={() =>
+                  setDatetime((prevVal) =>
+                    dayjs(prevVal).subtract(1, "day").valueOf()
+                  )
+                }
+              >
+                <NavigateBefore />
+              </IconButton>
+              <IconButton
+                onClick={() =>
+                  setDatetime((prevVal) =>
+                    dayjs(prevVal).add(1, "day").valueOf()
+                  )
+                }
+              >
+                <NavigateNext />
+              </IconButton>
+            </ButtonGroup>
+          </Box>
+        </Stack>
+        {meals?.length === 0 && (
+          <Button onClick={handleNewMenu}>New menu</Button>
+        )}
+        {meals?.length === 0 && <Button>Request dinner late</Button>}
+        {meals?.map((meal, i) => (
+          <Stack key={i}>
+            <Meal meal={meal} editable />
+          </Stack>
+        ))}
+      </Stack>
+    </Box>
   );
 }
