@@ -1,3 +1,4 @@
+import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { Infer, v } from "convex/values";
 
@@ -15,7 +16,7 @@ const lateObject = v.object({
   cancelled: v.optional(v.boolean()),
 });
 
-export type Late = Infer<typeof lateObject>;
+export type Late = Doc<"lates">;
 
 export const newLate = mutation({
   args: { late: lateObject },
@@ -42,8 +43,8 @@ export const get = query({
 });
 
 export const cancelLate = mutation({
-  args: { dishId: v.id("dishes") },
-  handler: (ctx, { dishId }) => {
-    ctx.db.patch(dishId, { cancelled: true });
+  args: { lateId: v.id("lates") },
+  handler: (ctx, { lateId }) => {
+    ctx.db.patch(lateId, { cancelled: true });
   },
 });

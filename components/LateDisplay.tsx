@@ -12,10 +12,10 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
   const allDishes = useQuery(api.dishes.getDishesForMeal, {
     mealId: late.mealId,
   });
-  const onlyIncludedDishes: Dish[] = late.dishIds
+  const onlyIncludedDishes = late.dishIds
     .map((dishId) => allDishes?.find((dish) => dish._id === dishId))
-    .filter((dish) => dish !== undefined);
-  const excludedDishes: Dish[] | undefined = allDishes?.filter(
+    .filter((dish): dish is Dish => dish !== undefined);
+  const excludedDishes = allDishes?.filter(
     (dish) => !late.dishIds.includes(dish._id)
   );
   const dishString = (() => {

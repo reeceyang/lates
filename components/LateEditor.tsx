@@ -27,10 +27,11 @@ import DishDisplay from "./DishDisplay";
 import { Late, ServingMethod } from "@/convex/lates";
 import dayjs from "dayjs";
 import { Meal } from "@/convex/meals";
+import { WithoutSystemFields } from "convex/server";
 
 export interface LateEditorProps {
   meal: Meal;
-  onSave: (late: Late) => void;
+  onSave: (late: WithoutSystemFields<Late>) => void;
   open: boolean;
   onClose: () => void;
 }

@@ -1,13 +1,14 @@
 import { mutation, query } from "./_generated/server";
 import { Infer, v } from "convex/values";
 import dayjs from "dayjs";
+import { Doc } from "./_generated/dataModel";
 
 const mealObject = v.object({
   datetime: v.number(),
   name: v.string(),
 });
 
-export type Meal = Infer<typeof mealObject>;
+export type Meal = Doc<"meals">;
 
 export const newMeal = mutation({
   args: { meal: mealObject },

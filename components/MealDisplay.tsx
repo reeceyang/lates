@@ -18,6 +18,7 @@ import { Meal } from "@/convex/meals";
 import dayjs from "dayjs";
 import LateEditor from "./LateEditor";
 import LateDisplay from "./LateDisplay";
+import { WithoutSystemFields } from "convex/server";
 
 export interface MealProps {
   meal: Meal;
@@ -31,7 +32,7 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
   const newLate = useMutation(api.lates.newLate);
   const [isLateEditorOpen, setIsLateEditorOpen] = useState(false);
 
-  const handleNewDish = (dish: Omit<Dish, "mealId">) => {
+  const handleNewDish = (dish: Omit<WithoutSystemFields<Dish>, "mealId">) => {
     newDish({ dish: { ...dish, mealId: meal._id } });
   };
 

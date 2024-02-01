@@ -9,11 +9,12 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
+import { WithoutSystemFields } from "convex/server";
 import { useState } from "react";
 
 export interface DishEditorProps {
   dish: Partial<Dish>;
-  onSave: (dish: Omit<Dish, "mealId">) => void;
+  onSave: (dish: Omit<WithoutSystemFields<Dish>, "mealId">) => void;
   isNew?: boolean;
 }
 

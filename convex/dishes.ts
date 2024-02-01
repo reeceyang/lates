@@ -1,3 +1,5 @@
+import { WithoutSystemFields } from "convex/server";
+import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { Infer, v } from "convex/values";
 
@@ -20,7 +22,7 @@ const dishObject = v.object({
   description: v.optional(v.string()),
 });
 
-export type Dish = Infer<typeof dishObject>;
+export type Dish = Doc<"dishes">;
 
 export const newDish = mutation({
   args: { dish: dishObject },
