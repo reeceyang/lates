@@ -21,7 +21,7 @@ export interface DishEditorProps {
 const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   const [name, setName] = useState(dish.name ?? "");
   const [description, setDescription] = useState(dish.description ?? "");
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(dish.tags ?? []);
 
   const handleSave = () => {
     if (name !== "") {
