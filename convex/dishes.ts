@@ -1,7 +1,6 @@
-import { WithoutSystemFields } from "convex/server";
 import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
-import { Infer, v } from "convex/values";
+import { v } from "convex/values";
 
 export enum DietTags {
   VEGETARIAN = "vegetarian",
@@ -52,5 +51,12 @@ export const deleteDish = mutation({
   args: { dishId: v.id("dishes") },
   handler: (ctx, { dishId }) => {
     ctx.db.delete(dishId);
+  },
+});
+
+export const patch = mutation({
+  args: { dishId: v.id("dishes"), updatedDish: dishObject },
+  handler: (ctx, { dishId, updatedDish }) => {
+    ctx.db.patch(dishId, updatedDish);
   },
 });

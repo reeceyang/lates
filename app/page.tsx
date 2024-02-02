@@ -58,13 +58,13 @@ export default function Home() {
       </Box>
 
       <Stack py={4} px={2} gap={4} maxWidth="65ch" m="auto">
-        <Stack direction="row">
+        <Stack direction="row" gap={1}>
           <Typography level="h1" fontWeight="200">
             {datetime === dayjs().startOf("day").valueOf()
               ? "Today"
               : dayjs(datetime).format("dddd, MMMM D, YYYY")}
           </Typography>
-          <Box ml="auto" my="auto">
+          <Box ml="auto">
             <ButtonGroup>
               <IconButton
                 onClick={() =>

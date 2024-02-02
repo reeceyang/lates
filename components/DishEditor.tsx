@@ -1,13 +1,13 @@
 import { DietTags, Dish } from "@/convex/dishes";
-import { Add, MoreHoriz, Save } from "@mui/icons-material";
+import { Add, Save } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
-  IconButton,
+  FormControl,
+  FormLabel,
   Input,
   Stack,
   Textarea,
-  Typography,
 } from "@mui/joy";
 import { WithoutSystemFields } from "convex/server";
 import { useState } from "react";
@@ -22,7 +22,6 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   const [name, setName] = useState(dish.name ?? "");
   const [description, setDescription] = useState(dish.description ?? "");
   const [tags, setTags] = useState<string[]>([]);
-  const [showMore, setShowMore] = useState(false);
 
   const handleSave = () => {
     if (name !== "") {
@@ -30,7 +29,6 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
       setName("");
       setDescription("");
       setTags([]);
-      setShowMore(false);
     }
   };
 
@@ -49,12 +47,6 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
           }}
           placeholder="name of your dish"
         />
-        <IconButton
-          onClick={() => setShowMore((prevValue) => !prevValue)}
-          variant="outlined"
-        >
-          <MoreHoriz />
-        </IconButton>
 
         <Button
           startDecorator={isNew ? <Add /> : <Save />}
@@ -63,27 +55,28 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
           {isNew ? "Add" : "Save"}
         </Button>
       </Stack>
-      {showMore && (
-        <>
-          <Stack direction="row" gap={1}>
-            <Typography m="auto">Tags:</Typography>
-            <Autocomplete
-              options={[...Object.values(DietTags)]}
-              value={tags}
-              onChange={(_event, newValue) => setTags(newValue)}
-              multiple
-              freeSolo
-              sx={{ flex: 1 }}
-            />
-          </Stack>
-          <Textarea
-            size="md"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="(optional) description: special notes, ingredients, allergens, etc."
-          />
-        </>
-      )}
+      <FormControl>
+        <FormLabel>Tags</FormLabel>
+        <Autocomplete
+          options={[...Object.values(DietTags)]}
+          value={tags}
+          onChange={(_event, newValue) => setTags(newValue)}
+          multiple
+          freeSolo
+          sx={{ flex: 1 }}
+          variant="plain"
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Description (optional)</FormLabel>
+        <Textarea
+          size="md"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          placeholder="special notes, ingredients, allergens, etc."
+          variant="plain"
+        />
+      </FormControl>
     </Stack>
   );
 };

@@ -60,7 +60,7 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
           <Typography level="h3">Menu</Typography>
           <List marker="disc" sx={{ pl: 0 }}>
             {dishes?.map((dish, i) => (
-              <ListItem key={i} sx={{ pl: 0 }}>
+              <ListItem key={i} sx={{ pl: 0, my: 1 }}>
                 <DishDisplay dish={dish} isEditable />
               </ListItem>
             ))}
