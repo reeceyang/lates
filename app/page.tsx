@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Divider,
   IconButton,
   Stack,
   Typography,
@@ -59,7 +60,7 @@ export default function Home() {
 
       <Stack py={4} px={2} gap={4} maxWidth="65ch" m="auto">
         <Stack direction="row" gap={1}>
-          <Typography level="h1" fontWeight="200">
+          <Typography level="h1" fontWeight="200" lineHeight="1">
             {datetime === dayjs().startOf("day").valueOf()
               ? "Today"
               : dayjs(datetime).format("dddd, MMMM D, YYYY")}
@@ -87,6 +88,7 @@ export default function Home() {
             </ButtonGroup>
           </Box>
         </Stack>
+        <Divider />
         {meals?.length === 0 && (
           <Button onClick={handleNewMenu}>New menu</Button>
         )}

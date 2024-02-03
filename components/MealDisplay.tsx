@@ -3,6 +3,7 @@ import { TakeoutDining } from "@mui/icons-material";
 import {
   Box,
   Button,
+  Card,
   Divider,
   List,
   ListItem,
@@ -54,39 +55,34 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
           </Box>
         </Stack>
 
-        <Divider />
-
         <Stack>
-          <Typography level="h3">Menu</Typography>
-          <List marker="disc" sx={{ pl: 0 }}>
+          <List
+            sx={{
+              "--List-gap": "2rem",
+              "--ListItem-paddingX": 0,
+            }}
+          >
             {dishes?.map((dish, i) => (
-              <ListItem key={i} sx={{ pl: 0, my: 1 }}>
-                <DishDisplay dish={dish} isEditable />
+              <ListItem key={i}>
+                <DishDisplay dish={dish} isEditable showDots />
               </ListItem>
             ))}
-            <ListItem sx={{ pl: 0 }}>
-              <Typography color="neutral" pb={1}>
-                add a new dish
-              </Typography>
-              {editable && (
-                <DishEditor onSave={handleNewDish} isNew dish={{}} />
-              )}
+            <ListItem>
+              <Card sx={{ width: "100%" }}>
+                {editable && (
+                  <DishEditor onSave={handleNewDish} isNew dish={{}} />
+                )}
+              </Card>
             </ListItem>
           </List>
         </Stack>
 
         <Divider />
 
-        <Stack>
-          <Typography level="h3">Lates</Typography>
-          <List marker="disc" sx={{ pl: 0 }}>
-            {lates?.map((late, i) => (
-              <ListItem key={i} sx={{ pl: 0 }}>
-                <LateDisplay late={late} />
-              </ListItem>
-            ))}
-
-            <ListItem sx={{ pl: 0 }}>
+        <Stack gap={2}>
+          <Stack direction="row" flexWrap="wrap">
+            <Typography level="h3">Lates</Typography>
+            <Box ml="auto">
               <Button
                 startDecorator={<TakeoutDining />}
                 sx={{ width: "max-content", my: "auto" }}
@@ -95,8 +91,13 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
               >
                 Request late
               </Button>
-            </ListItem>
-          </List>
+            </Box>
+          </Stack>
+          {lates?.map((late, i) => (
+            <Card key={i}>
+              <LateDisplay late={late} />
+            </Card>
+          ))}
         </Stack>
       </Stack>
       <LateEditor

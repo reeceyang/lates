@@ -33,28 +33,30 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   };
 
   return (
-    <Stack gap={1}>
-      <Stack direction="row" gap={1}>
-        <Input
-          fullWidth
-          size="md"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              handleSave();
-            }
-          }}
-          placeholder="name of your dish"
-        />
-
-        <Button
-          startDecorator={isNew ? <Add /> : <Save />}
-          onClick={handleSave}
-        >
-          {isNew ? "Add" : "Save"}
-        </Button>
-      </Stack>
+    <Stack gap={1} width="100%">
+      <FormControl>
+        {isNew && <FormLabel>Add a new dish</FormLabel>}
+        <Stack direction="row" gap={1}>
+          <Input
+            fullWidth
+            size="md"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            onKeyUp={(event) => {
+              if (event.key === "Enter") {
+                handleSave();
+              }
+            }}
+            placeholder="name of your dish"
+          />
+          <Button
+            startDecorator={isNew ? <Add /> : <Save />}
+            onClick={handleSave}
+          >
+            {isNew ? "Add" : "Save"}
+          </Button>
+        </Stack>
+      </FormControl>
       <FormControl>
         <FormLabel>Tags</FormLabel>
         <Autocomplete
@@ -64,7 +66,7 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
           multiple
           freeSolo
           sx={{ flex: 1 }}
-          variant="plain"
+          variant="soft"
         />
       </FormControl>
       <FormControl>
@@ -74,7 +76,7 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           placeholder="special notes, ingredients, allergens, etc."
-          variant="plain"
+          variant="soft"
         />
       </FormControl>
     </Stack>
