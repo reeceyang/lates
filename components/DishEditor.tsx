@@ -10,7 +10,7 @@ import {
   Textarea,
 } from "@mui/joy";
 import { WithoutSystemFields } from "convex/server";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export interface DishEditorProps {
   dish: Partial<Dish>;
@@ -22,6 +22,7 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   const [name, setName] = useState(dish.name ?? "");
   const [description, setDescription] = useState(dish.description ?? "");
   const [tags, setTags] = useState<string[]>(dish.tags ?? []);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const handleSave = () => {
     if (name !== "") {
@@ -29,11 +30,12 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
       setName("");
       setDescription("");
       setTags([]);
+      editorRef.current?.scrollIntoView();
     }
   };
 
   return (
-    <Stack gap={1} width="100%">
+    <Stack gap={1} width="100%" ref={editorRef}>
       <FormControl>
         {isNew && <FormLabel>Add a new dish</FormLabel>}
         <Stack direction="row" gap={1}>
