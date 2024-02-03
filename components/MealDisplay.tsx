@@ -18,8 +18,8 @@ import DishDisplay from "./DishDisplay";
 import { Meal } from "@/convex/meals";
 import dayjs from "dayjs";
 import LateEditor from "./LateEditor";
-import LateDisplay from "./LateDisplay";
 import { WithoutSystemFields } from "convex/server";
+import LateDisplay from "./LateDisplay";
 
 export interface MealProps {
   meal: Meal;
@@ -108,10 +108,11 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
         </Stack>
       </Stack>
       <LateEditor
-        meal={meal}
+        mealId={meal._id}
         open={isLateEditorOpen}
         onClose={() => setIsLateEditorOpen(false)}
         onSave={(late) => newLate({ late })}
+        late={{}}
       />
     </>
   );

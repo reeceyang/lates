@@ -1,8 +1,21 @@
 import { api } from "@/convex/_generated/api";
 import { Dish } from "@/convex/dishes";
 import { Late } from "@/convex/lates";
-import { Button, Skeleton, Stack, Typography } from "@mui/joy";
+import {
+  Box,
+  Button,
+  Chip,
+  FormControl,
+  FormLabel,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/joy";
 import { useMutation, useQuery } from "convex/react";
+import { WithoutSystemFields } from "convex/server";
+import { useState } from "react";
+import LateEditor from "./LateEditor";
+import dayjs from "dayjs";
 
 export interface LateDisplayProps {
   late: Late;
@@ -13,6 +26,9 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
     mealId: late.mealId,
   });
   const setIsCancelled = useMutation(api.lates.setIsCancelled);
+  const patchLate = useMutation(api.lates.patch);
+  const [isEditing, setIsEditing] = useState(false);
+
   const onlyIncludedDishes = late.dishIds
     .map((dishId) => allDishes?.find((dish) => dish._id === dishId))
     .filter((dish): dish is Dish => dish !== undefined);
@@ -46,36 +62,74 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
     });
   };
 
+  const handleSave = (updatedLate: WithoutSystemFields<Late>) => {
+    patchLate({
+      lateId: late._id,
+      updatedLate: { ...updatedLate },
+    });
+    setIsEditing(false);
+  };
+
   return (
-    <Stack gap={1} flex="1">
-      <Stack direction="row" gap={1}>
-        <Typography fontWeight="bold" my="auto" flex={1}>
-          {late.cancelled ? (
-            <>
-              <s>{late.name}</s> CANCELLED
-            </>
-          ) : (
-            late.name
+    <>
+      <Stack gap={1} flex="1">
+        <Stack direction="row" gap={1}>
+          <Typography fontWeight="bold" my="auto">
+            {late.cancelled ? (
+              <>
+                CANCELLED <s>{late.name}</s>
+              </>
+            ) : (
+              late.name
+            )}
+          </Typography>
+
+          {!late.cancelled && (
+            <Box m="auto">
+              <Chip variant="outlined">{late.servingMethod}</Chip>
+            </Box>
           )}
-        </Typography>
-        <Button size="sm" color="neutral" variant="outlined">
-          edit
-        </Button>
-        <Button
-          size="sm"
-          color="neutral"
-          variant="outlined"
-          onClick={toggleCancel}
-        >
-          {late.cancelled ? "uncancel" : "cancel"}
-        </Button>
+          <Box flex="1" />
+          {!late.cancelled && (
+            <Button
+              size="sm"
+              color="neutral"
+              variant="outlined"
+              onClick={() => setIsEditing(true)}
+            >
+              edit
+            </Button>
+          )}
+          <Button
+            size="sm"
+            color="neutral"
+            variant="outlined"
+            onClick={toggleCancel}
+          >
+            {late.cancelled ? "uncancel" : "cancel"}
+          </Button>
+        </Stack>
+        {!late.cancelled && (
+          <>
+            <Typography>
+              {dishString ? dishString : <Skeleton>Lorem ipsum</Skeleton>}
+            </Typography>
+            <Typography>{late.description}</Typography>
+            <Typography level="body-xs">
+              Requested{" "}
+              {dayjs(late._creationTime).format("hh:mm a MMM D, YYYY")}
+            </Typography>
+          </>
+        )}
       </Stack>
-      <Typography>{late.servingMethod}</Typography>
-      <Typography>
-        {dishString ? dishString : <Skeleton>Lorem ipsum</Skeleton>}
-      </Typography>
-      <Typography>{late.description}</Typography>
-    </Stack>
+      <LateEditor
+        mealId={late.mealId}
+        onSave={handleSave}
+        open={isEditing}
+        onClose={() => setIsEditing(false)}
+        late={late}
+      />
+    </>
   );
 };
 

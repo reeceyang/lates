@@ -26,23 +26,34 @@ import { useState } from "react";
 import DishDisplay from "./DishDisplay";
 import { Late, ServingMethod } from "@/convex/lates";
 import dayjs from "dayjs";
-import { Meal } from "@/convex/meals";
 import { WithoutSystemFields } from "convex/server";
 
 export interface LateEditorProps {
-  meal: Meal;
+  mealId: Id<"meals">;
   onSave: (late: WithoutSystemFields<Late>) => void;
   open: boolean;
   onClose: () => void;
+  late: Partial<WithoutSystemFields<Late>>;
 }
 
-const LateEditor = ({ meal, onSave, open, onClose }: LateEditorProps) => {
-  const allDishes = useQuery(api.dishes.getDishesForMeal, { mealId: meal._id });
-  const [name, setName] = useState("");
-  const [servingMethod, setServingMethod] = useState(ServingMethod.FRIDGE);
-  const [selectedDishIds, setSelectedDishIds] = useState<Id<"dishes">[]>([]);
+const LateEditor = ({
+  mealId,
+  onSave,
+  open,
+  onClose,
+  late,
+}: LateEditorProps) => {
+  const meal = useQuery(api.meals.get, { mealId });
+  const allDishes = useQuery(api.dishes.getDishesForMeal, { mealId });
+  const [name, setName] = useState(late.name ?? "");
+  const [servingMethod, setServingMethod] = useState(
+    late.servingMethod ?? ServingMethod.FRIDGE
+  );
+  const [selectedDishIds, setSelectedDishIds] = useState<Id<"dishes">[]>(
+    late.dishIds ?? []
+  );
   const allSelected = allDishes?.length === selectedDishIds.length;
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(late.description ?? "");
   const [isEmptyNameError, setIsEmptyNameError] = useState(false);
 
   const handleSave = () => {
@@ -50,7 +61,7 @@ const LateEditor = ({ meal, onSave, open, onClose }: LateEditorProps) => {
       onSave({
         name,
         servingMethod,
-        mealId: meal._id,
+        mealId,
         dishIds: selectedDishIds,
         description,
       });
@@ -87,8 +98,8 @@ const LateEditor = ({ meal, onSave, open, onClose }: LateEditorProps) => {
         }}
       >
         <DialogTitle>
-          Requesting a {meal.name} late for{" "}
-          {dayjs(meal.datetime).format("dddd, MMMM D, YYYY")}
+          Requesting a {meal?.name} late for{" "}
+          {dayjs(meal?.datetime).format("dddd, MMMM D, YYYY")}
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ overflowX: "clip" }}>
