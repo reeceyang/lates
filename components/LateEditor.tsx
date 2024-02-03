@@ -39,6 +39,12 @@ export interface LateEditorProps {
 const NAME_KEY = "lateName";
 const DESCRIPTION_KEY = "lateDescription";
 
+/**
+ * Component for editing or creating lates. The parent component controls what
+ * happens with the edited late fields through the `onSave` callback. Previous
+ * late field values are first filled in from the `late` prop, and then from
+ * browser localStorage.
+ */
 const LateEditor = ({
   mealId,
   onSave,

@@ -20,6 +20,12 @@ export interface DishEditorProps {
   isNew?: boolean;
 }
 
+/**
+ * Component for editing or creating dishes. The parent component controls what
+ * happens with the edited dish fields through the `onSave` callback.
+ *
+ * Pressing the `Enter` key with the name field focused will save the late.
+ */
 const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   const [name, setName] = useState(dish.name ?? "");
   const [description, setDescription] = useState(dish.description ?? "");

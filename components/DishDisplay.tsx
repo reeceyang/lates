@@ -12,6 +12,10 @@ export interface DishDisplayProps {
   showDots?: boolean;
 }
 
+/**
+ * Displays a dish and controls for editing the late or removing the dish from
+ * the menu.
+ */
 const DishDisplay = ({
   dish,
   isEditable = false,

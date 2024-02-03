@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# lates
 
-## Getting Started
+Request lates and plan menus for [Xi](https://xi.mit.edu/) house dinners.
 
-First, run the development server:
+Features:
+
+- Add dishes to menus. The app will try to automatically infer tags from the name of the dish. You can also customize the tags manually and add a text description to the menu.
+
+- Request lates by selecting dishes from the menu and specifying additional preferences.
+
+- Name and late preferences are saved to browser localStorage.
+
+- View and create menus and lates for past and future dates.
+
+- Mark lates as cancelled or fulfilled. Edit all dishes and lates after creating them.
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). The project uses [Convex](https://www.convex.dev/), a serverless database framework, for the backend and the [Joy UI](https://mui.com/joy-ui/getting-started/) component library on the frontend. [Day.js](https://day.js.org/) provides date and time utilities.
+
+## Develop
+
+Install dependencies using [pnpm](https://pnpm.io/installation):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+```
+
+To set up Convex, run:
+
+```bash
+pnpm convex dev
+```
+
+Then, run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `/app`: Contains the only page in the app (so far)
+- `/components`: React components for displaying and editing Meals, Lates, and Dishes
+- `/utils`: scripts for the autotagging functionality
+- `/convex`: Convex serverless functions and database schema
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The app is deployed on Vercel. View the [Convex documentation](https://docs.convex.dev/production/hosting/vercel) for instructions on how to deploy a Convex app to Vercel.

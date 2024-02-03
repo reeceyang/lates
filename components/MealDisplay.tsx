@@ -27,6 +27,10 @@ export interface MealProps {
   openLateEditor?: boolean;
 }
 
+/**
+ * Displays a meal, which includes all menu items and lates, and the controls
+ * for adding new menu items and lates.
+ */
 const MealDisplay = ({
   meal,
   editable = false,

@@ -22,6 +22,9 @@ export interface LateDisplayProps {
   late: Late;
 }
 
+/**
+ * Displays a late and controls for editing, cancelling, and fulfilling the late.
+ */
 const LateDisplay = ({ late }: LateDisplayProps) => {
   const allDishes = useQuery(api.dishes.getDishesForMeal, {
     mealId: late.mealId,
