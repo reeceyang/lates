@@ -1,8 +1,10 @@
 import { DietTags, Dish } from "@/convex/dishes";
-import { Add, Save } from "@mui/icons-material";
+import { getAutoTags } from "@/utils/autotag";
+import { Add, Close, Save } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
+  Chip,
   FormControl,
   FormLabel,
   Input,
@@ -10,7 +12,7 @@ import {
   Textarea,
 } from "@mui/joy";
 import { WithoutSystemFields } from "convex/server";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface DishEditorProps {
   dish: Partial<Dish>;
@@ -22,7 +24,25 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
   const [name, setName] = useState(dish.name ?? "");
   const [description, setDescription] = useState(dish.description ?? "");
   const [tags, setTags] = useState<string[]>(dish.tags ?? []);
+  // initially exclude tags that are not in the given dish's tags
+  const [excludedAutoTags, setExcludedAutoTags] = useState<Set<string>>(
+    new Set(
+      getAutoTags(dish.name ?? "").filter((tag) => !dish.tags?.includes(tag))
+    )
+  );
   const editorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // update tags with automatic tags except for any previously excluded tags
+    setTags((prevTags) =>
+      Array.from(
+        new Set([
+          ...prevTags,
+          ...getAutoTags(name).filter((tag) => !excludedAutoTags.has(tag)),
+        ])
+      )
+    );
+  }, [excludedAutoTags, name]);
 
   const handleSave = () => {
     if (name !== "") {
@@ -64,11 +84,31 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
         <Autocomplete
           options={[...Object.values(DietTags)]}
           value={tags}
-          onChange={(_event, newValue) => setTags(newValue)}
           multiple
           freeSolo
           sx={{ flex: 1 }}
           variant="soft"
+          onChange={(_event, newValue, changeReason, changeDetails) => {
+            if (changeReason === "removeOption" && changeDetails) {
+              // prevent re-adding the same auto tag
+              setExcludedAutoTags(
+                new Set([...Array.from(excludedAutoTags), changeDetails.option])
+              );
+            }
+            return setTags(newValue);
+          }}
+          renderTags={(tags, getTagProps) =>
+            tags.map((item, index) => (
+              <Chip
+                variant="outlined"
+                endDecorator={<Close fontSize="inherit" />}
+                {...getTagProps({ index })}
+                key={index}
+              >
+                {item}
+              </Chip>
+            ))
+          }
         />
       </FormControl>
       <FormControl>
