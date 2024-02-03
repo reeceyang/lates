@@ -24,14 +24,19 @@ import LateDisplay from "./LateDisplay";
 export interface MealProps {
   meal: Meal;
   editable?: boolean;
+  openLateEditor?: boolean;
 }
 
-const MealDisplay = ({ meal, editable = false }: MealProps) => {
+const MealDisplay = ({
+  meal,
+  editable = false,
+  openLateEditor = false,
+}: MealProps) => {
   const dishes = useQuery(api.dishes.getDishesForMeal, { mealId: meal._id });
   const lates = useQuery(api.lates.getLatesForMeal, { mealId: meal._id });
   const newDish = useMutation(api.dishes.newDish);
   const newLate = useMutation(api.lates.newLate);
-  const [isLateEditorOpen, setIsLateEditorOpen] = useState(false);
+  const [isLateEditorOpen, setIsLateEditorOpen] = useState(openLateEditor);
 
   const handleNewDish = (dish: Omit<WithoutSystemFields<Dish>, "mealId">) => {
     newDish({ dish: { ...dish, mealId: meal._id } });
@@ -40,11 +45,11 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
   return (
     <>
       <Stack gap={4}>
-        <Stack direction="row" gap={1}>
-          <Typography level="h2" mr="auto">
+        <Stack direction="row" gap={1} flexWrap="wrap">
+          <Typography level="h2">
             {meal.name} @ {dayjs(meal.datetime).format("h:mm a")}
           </Typography>
-          <Box>
+          <Box ml="auto">
             <Button
               startDecorator={<TakeoutDining />}
               sx={{ width: "max-content" }}

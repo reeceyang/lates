@@ -13,10 +13,11 @@ import {
   Typography,
 } from "@mui/joy";
 import { useMutation, useQuery } from "convex/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { Id } from "@/convex/_generated/dataModel";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
@@ -27,10 +28,19 @@ export default function Home() {
     datetime: datetime.valueOf(),
     timezoneOffset: new Date().getTimezoneOffset(),
   });
+  // whether a meal should have its late editor open upon rendering
+  const [openLateEditorMealId, setOpenLateEditorMealId] = useState<
+    undefined | Id<"meals">
+  >(undefined);
 
-  const handleNewMenu = () =>
+  useEffect(() => {
+    // reset this state when switching to a different day
+    setOpenLateEditorMealId(undefined);
+  }, [datetime]);
+
+  const handleNewMenu = async (openLateEditor = false) => {
     // hard code to dinner
-    newMeal({
+    const newMealId = await newMeal({
       meal: {
         datetime: dayjs(datetime)
           .startOf("day")
@@ -41,6 +51,11 @@ export default function Home() {
         name: "Dinner",
       },
     });
+    if (openLateEditor) {
+      // open the late editor for the new meal right away
+      setOpenLateEditorMealId(newMealId);
+    }
+  };
 
   return (
     <Box
@@ -90,12 +105,20 @@ export default function Home() {
         </Stack>
         <Divider />
         {meals?.length === 0 && (
-          <Button onClick={handleNewMenu}>New menu</Button>
+          <Button onClick={() => handleNewMenu()}>New menu</Button>
         )}
-        {meals?.length === 0 && <Button>Request dinner late</Button>}
+        {meals?.length === 0 && (
+          <Button onClick={() => handleNewMenu(true)}>
+            Request dinner late
+          </Button>
+        )}
         {meals?.map((meal, i) => (
           <Stack key={i}>
-            <Meal meal={meal} editable />
+            <Meal
+              meal={meal}
+              editable
+              openLateEditor={meal._id === openLateEditorMealId}
+            />
           </Stack>
         ))}
       </Stack>

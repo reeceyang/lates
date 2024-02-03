@@ -38,16 +38,16 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
   const dishString = (() => {
     if (excludedDishes) {
       if (excludedDishes.length === 0) {
-        return "everything";
+        return "All menu items selected";
       }
       if (onlyIncludedDishes.length === 0) {
-        return "nothing";
+        return "No menu items selected";
       }
-      const lf = new Intl.ListFormat("en");
+      const lf = new Intl.ListFormat("en"); // joins strings together grammatically
       if (excludedDishes?.length > onlyIncludedDishes.length) {
-        return `only ${lf.format(onlyIncludedDishes.map((dish) => dish.name))}`;
+        return `Only ${lf.format(onlyIncludedDishes.map((dish) => dish.name))}`;
       } else {
-        return `everything except for ${lf.format(
+        return `Everything except for ${lf.format(
           excludedDishes.map((dish) => dish.name)
         )}`;
       }
@@ -117,7 +117,7 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
             <Typography>{late.description}</Typography>
             <Typography level="body-xs">
               Requested{" "}
-              {dayjs(late._creationTime).format("hh:mm a MMM D, YYYY")}
+              {dayjs(late._creationTime).format("MMM D, YYYY, hh:mm a ")}
             </Typography>
           </>
         )}

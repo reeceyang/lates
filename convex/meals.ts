@@ -13,7 +13,7 @@ export type Meal = Doc<"meals">;
 export const newMeal = mutation({
   args: { meal: mealObject },
   handler: (ctx, args) => {
-    ctx.db.insert("meals", args.meal);
+    return ctx.db.insert("meals", args.meal);
   },
 });
 
