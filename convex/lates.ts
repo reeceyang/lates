@@ -49,6 +49,13 @@ export const setIsCancelled = mutation({
   },
 });
 
+export const setIsFulfilled = mutation({
+  args: { lateId: v.id("lates"), fulfilled: v.boolean() },
+  handler: (ctx, { lateId, fulfilled }) => {
+    ctx.db.patch(lateId, { fulfilled });
+  },
+});
+
 export const patch = mutation({
   args: { lateId: v.id("lates"), updatedLate: lateObject },
   handler: (ctx, { lateId, updatedLate }) => {

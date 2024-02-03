@@ -101,7 +101,7 @@ const MealDisplay = ({
           {lates?.map((late, i) => (
             <Card
               key={i}
-              {...(late.cancelled && {
+              {...((late.cancelled || late.fulfilled) && {
                 sx: (theme) => ({
                   background: theme.vars.palette.neutral[100],
                 }),

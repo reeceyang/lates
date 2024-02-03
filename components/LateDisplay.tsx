@@ -4,6 +4,7 @@ import { Late } from "@/convex/lates";
 import {
   Box,
   Button,
+  Checkbox,
   Chip,
   FormControl,
   FormLabel,
@@ -26,6 +27,7 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
     mealId: late.mealId,
   });
   const setIsCancelled = useMutation(api.lates.setIsCancelled);
+  const setIsFulfilled = useMutation(api.lates.setIsFulfilled);
   const patchLate = useMutation(api.lates.patch);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -62,6 +64,13 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
     });
   };
 
+  const toggleFulfill = () => {
+    setIsFulfilled({
+      lateId: late._id,
+      fulfilled: !late.fulfilled,
+    });
+  };
+
   const handleSave = (updatedLate: WithoutSystemFields<Late>) => {
     patchLate({
       lateId: late._id,
@@ -91,6 +100,19 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
           )}
           <Box flex="1" />
           {!late.cancelled && (
+            <Box m="auto">
+              <Button
+                size="sm"
+                color="neutral"
+                variant="outlined"
+                onClick={toggleFulfill}
+              >
+                <Checkbox checked={late.fulfilled} size="sm" sx={{ mr: 1 }} />
+                {late.fulfilled ? "fulfilled" : "fulfill"}
+              </Button>
+            </Box>
+          )}
+          {!late.cancelled && !late.fulfilled && (
             <Button
               size="sm"
               color="neutral"
@@ -100,21 +122,25 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
               edit
             </Button>
           )}
-          <Button
-            size="sm"
-            color="neutral"
-            variant="outlined"
-            onClick={toggleCancel}
-          >
-            {late.cancelled ? "uncancel" : "cancel"}
-          </Button>
+          {!late.fulfilled && (
+            <Button
+              size="sm"
+              color="neutral"
+              variant="outlined"
+              onClick={toggleCancel}
+            >
+              {late.cancelled ? "uncancel" : "cancel"}
+            </Button>
+          )}
         </Stack>
         {!late.cancelled && (
           <>
             <Typography>
               {dishString ? dishString : <Skeleton>Lorem ipsum</Skeleton>}
             </Typography>
-            <Typography>{late.description}</Typography>
+            <Typography sx={{ wordWrap: "break-word" }}>
+              {late.description}
+            </Typography>
             <Typography level="body-xs">
               Requested{" "}
               {dayjs(late._creationTime).format("MMM D, YYYY, hh:mm a ")}

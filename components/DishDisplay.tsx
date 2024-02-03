@@ -36,9 +36,14 @@ const DishDisplay = ({
   }
 
   return (
-    <Stack flex="1">
-      <Stack direction="row" gap={1} flexWrap="wrap">
-        <Typography fontWeight="bold" my="auto">
+    <Stack flex="1" maxWidth="100%">
+      <Stack direction="row" gap={1} flexWrap="wrap" maxWidth="100%">
+        <Typography
+          fontWeight="bold"
+          my="auto"
+          sx={{ wordWrap: "break-word" }}
+          maxWidth="100%"
+        >
           {dish.name}
         </Typography>
         {showDots && (
