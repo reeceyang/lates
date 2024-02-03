@@ -98,7 +98,8 @@ const LateEditor = ({
         }}
       >
         <DialogTitle>
-          Requesting a {meal?.name} late for{" "}
+          {Object.keys(late).length > 0 ? "Editing" : "Requesting"} a{" "}
+          {meal?.name} late for{" "}
           {dayjs(meal?.datetime).format("dddd, MMMM D, YYYY")}
         </DialogTitle>
         <Divider />
@@ -150,24 +151,32 @@ const LateEditor = ({
 
             <Stack gap={2}>
               <FormLabel>Dishes</FormLabel>
-              <Card
-                variant="soft"
-                sx={{ width: "fit-content", px: 2 }}
-                size="sm"
-              >
-                <Checkbox
-                  label={allSelected ? "uncheck all" : "check all"}
-                  overlay
-                  onChange={() => {
-                    if (allSelected) {
-                      setSelectedDishIds([]);
-                    } else if (allDishes) {
-                      setSelectedDishIds(allDishes?.map((dish) => dish._id));
-                    }
-                  }}
-                  checked={allSelected}
-                />
-              </Card>
+              {allDishes && allDishes.length > 0 ? (
+                <Card
+                  variant="soft"
+                  sx={{ width: "fit-content", px: 2 }}
+                  size="sm"
+                >
+                  <Checkbox
+                    label={allSelected ? "uncheck all" : "check all"}
+                    overlay
+                    onChange={() => {
+                      if (allSelected) {
+                        setSelectedDishIds([]);
+                      } else if (allDishes) {
+                        setSelectedDishIds(allDishes?.map((dish) => dish._id));
+                      }
+                    }}
+                    checked={allSelected}
+                  />
+                </Card>
+              ) : (
+                <Typography>
+                  There are no dishes for this meal yet. Please indicate your
+                  preferences using the <strong>Additional information</strong>{" "}
+                  textbox.
+                </Typography>
+              )}
               {allDishes?.map((dish, i) => (
                 <Card variant="soft" key={i}>
                   <Checkbox

@@ -37,11 +37,11 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
   );
   const dishString = (() => {
     if (excludedDishes) {
-      if (excludedDishes.length === 0) {
-        return "All menu items selected";
-      }
       if (onlyIncludedDishes.length === 0) {
         return "No menu items selected";
+      }
+      if (excludedDishes.length === 0) {
+        return "All menu items selected";
       }
       const lf = new Intl.ListFormat("en"); // joins strings together grammatically
       if (excludedDishes?.length > onlyIncludedDishes.length) {
