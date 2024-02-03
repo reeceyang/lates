@@ -42,9 +42,16 @@ export const get = query({
   },
 });
 
-export const cancelLate = mutation({
-  args: { lateId: v.id("lates") },
-  handler: (ctx, { lateId }) => {
-    ctx.db.patch(lateId, { cancelled: true });
+export const setIsCancelled = mutation({
+  args: { lateId: v.id("lates"), cancelled: v.boolean() },
+  handler: (ctx, { lateId, cancelled }) => {
+    ctx.db.patch(lateId, { cancelled });
+  },
+});
+
+export const patch = mutation({
+  args: { lateId: v.id("lates"), updatedLate: lateObject },
+  handler: (ctx, { lateId, updatedLate }) => {
+    ctx.db.patch(lateId, updatedLate);
   },
 });

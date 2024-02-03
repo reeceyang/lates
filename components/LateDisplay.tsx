@@ -2,7 +2,7 @@ import { api } from "@/convex/_generated/api";
 import { Dish } from "@/convex/dishes";
 import { Late } from "@/convex/lates";
 import { Button, Skeleton, Stack, Typography } from "@mui/joy";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 
 export interface LateDisplayProps {
   late: Late;
@@ -12,6 +12,7 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
   const allDishes = useQuery(api.dishes.getDishesForMeal, {
     mealId: late.mealId,
   });
+  const setIsCancelled = useMutation(api.lates.setIsCancelled);
   const onlyIncludedDishes = late.dishIds
     .map((dishId) => allDishes?.find((dish) => dish._id === dishId))
     .filter((dish): dish is Dish => dish !== undefined);
@@ -38,17 +39,35 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
     return undefined;
   })();
 
+  const toggleCancel = () => {
+    setIsCancelled({
+      lateId: late._id,
+      cancelled: !late.cancelled,
+    });
+  };
+
   return (
     <Stack gap={1} flex="1">
       <Stack direction="row" gap={1}>
         <Typography fontWeight="bold" my="auto" flex={1}>
-          {late.name}
+          {late.cancelled ? (
+            <>
+              <s>{late.name}</s> CANCELLED
+            </>
+          ) : (
+            late.name
+          )}
         </Typography>
         <Button size="sm" color="neutral" variant="outlined">
           edit
         </Button>
-        <Button size="sm" color="neutral" variant="outlined">
-          cancel
+        <Button
+          size="sm"
+          color="neutral"
+          variant="outlined"
+          onClick={toggleCancel}
+        >
+          {late.cancelled ? "uncancel" : "cancel"}
         </Button>
       </Stack>
       <Typography>{late.servingMethod}</Typography>

@@ -94,7 +94,14 @@ const MealDisplay = ({ meal, editable = false }: MealProps) => {
             </Box>
           </Stack>
           {lates?.map((late, i) => (
-            <Card key={i}>
+            <Card
+              key={i}
+              {...(late.cancelled && {
+                sx: (theme) => ({
+                  background: theme.vars.palette.neutral[100],
+                }),
+              })}
+            >
               <LateDisplay late={late} />
             </Card>
           ))}
