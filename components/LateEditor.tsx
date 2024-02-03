@@ -36,6 +36,9 @@ export interface LateEditorProps {
   late: Partial<WithoutSystemFields<Late>>;
 }
 
+const NAME_KEY = "lateName";
+const DESCRIPTION_KEY = "lateDescription";
+
 const LateEditor = ({
   mealId,
   onSave,
@@ -45,7 +48,9 @@ const LateEditor = ({
 }: LateEditorProps) => {
   const meal = useQuery(api.meals.get, { mealId });
   const allDishes = useQuery(api.dishes.getDishesForMeal, { mealId });
-  const [name, setName] = useState(late.name ?? "");
+  const [name, setName] = useState(
+    late.name ?? localStorage.getItem(NAME_KEY) ?? ""
+  );
   const [servingMethod, setServingMethod] = useState(
     late.servingMethod ?? ServingMethod.FRIDGE
   );
@@ -53,7 +58,9 @@ const LateEditor = ({
     late.dishIds ?? []
   );
   const allSelected = allDishes?.length === selectedDishIds.length;
-  const [description, setDescription] = useState(late.description ?? "");
+  const [description, setDescription] = useState(
+    late.description ?? localStorage.getItem(DESCRIPTION_KEY) ?? ""
+  );
   const [isEmptyNameError, setIsEmptyNameError] = useState(false);
 
   const handleSave = () => {
@@ -65,6 +72,8 @@ const LateEditor = ({
         dishIds: selectedDishIds,
         description,
       });
+      localStorage.setItem(NAME_KEY, name);
+      localStorage.setItem(DESCRIPTION_KEY, description);
       onClose();
     } else {
       setIsEmptyNameError(true);
