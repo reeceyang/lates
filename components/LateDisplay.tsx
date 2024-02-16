@@ -85,7 +85,7 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
   return (
     <>
       <Stack gap={1} flex="1">
-        <Stack direction="row" gap={1}>
+        <Stack direction="row" gap={1} flexWrap="wrap">
           <Typography fontWeight="bold" my="auto">
             {late.cancelled ? (
               <>
@@ -97,44 +97,50 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
           </Typography>
 
           {!late.cancelled && (
-            <Box m="auto">
+            <Box my="auto">
               <Chip variant="outlined">{late.servingMethod}</Chip>
             </Box>
           )}
-          <Box flex="1" />
-          {!late.cancelled && (
-            <Box m="auto">
+          <Stack direction="row" ml="auto" gap={1}>
+            {!late.cancelled && (
+              <Box m="auto">
+                <Button
+                  size="sm"
+                  color="neutral"
+                  variant="outlined"
+                  onClick={toggleFulfill}
+                >
+                  <Checkbox
+                    overlay
+                    checked={late.fulfilled}
+                    size="sm"
+                    sx={{ mr: 1 }}
+                  />
+                  {late.fulfilled ? "fulfilled" : "fulfill"}
+                </Button>
+              </Box>
+            )}
+            {!late.cancelled && !late.fulfilled && (
               <Button
                 size="sm"
                 color="neutral"
                 variant="outlined"
-                onClick={toggleFulfill}
+                onClick={() => setIsEditing(true)}
               >
-                <Checkbox checked={late.fulfilled} size="sm" sx={{ mr: 1 }} />
-                {late.fulfilled ? "fulfilled" : "fulfill"}
+                edit
               </Button>
-            </Box>
-          )}
-          {!late.cancelled && !late.fulfilled && (
-            <Button
-              size="sm"
-              color="neutral"
-              variant="outlined"
-              onClick={() => setIsEditing(true)}
-            >
-              edit
-            </Button>
-          )}
-          {!late.fulfilled && (
-            <Button
-              size="sm"
-              color="neutral"
-              variant="outlined"
-              onClick={toggleCancel}
-            >
-              {late.cancelled ? "uncancel" : "cancel"}
-            </Button>
-          )}
+            )}
+            {!late.fulfilled && (
+              <Button
+                size="sm"
+                color="neutral"
+                variant="outlined"
+                onClick={toggleCancel}
+              >
+                {late.cancelled ? "uncancel" : "cancel"}
+              </Button>
+            )}
+          </Stack>
         </Stack>
         {!late.cancelled && (
           <>
