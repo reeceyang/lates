@@ -2,18 +2,6 @@ import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-export enum DietTags {
-  VEGETARIAN = "vegetarian",
-  VEGAN = "vegan",
-}
-
-export enum FoodTags {
-  PROTEIN = "protein",
-  STARCH = "starch",
-  VEGETABLE = "vegetable",
-  DIZ = "diz",
-}
-
 const dishObject = v.object({
   mealId: v.id("meals"),
   name: v.string(),

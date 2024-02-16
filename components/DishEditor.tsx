@@ -1,5 +1,5 @@
-import { DietTags, Dish } from "@/convex/dishes";
-import { getAutoTags } from "@/utils/autotag";
+import { Dish } from "@/convex/dishes";
+import { FOOD, getAutoTags } from "@/utils/autotag";
 import { Add, Close, Save } from "@mui/icons-material";
 import {
   Autocomplete,
@@ -88,7 +88,7 @@ const DishEditor = ({ dish, onSave, isNew = false }: DishEditorProps) => {
       <FormControl>
         <FormLabel>Tags</FormLabel>
         <Autocomplete
-          options={[...Object.values(DietTags)]}
+          options={Object.keys(FOOD)}
           value={tags}
           multiple
           freeSolo

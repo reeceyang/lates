@@ -67,10 +67,11 @@ const STARCH = {
   ramen: {},
 };
 
-const FOOD: Tree = {
+export const FOOD: Tree = {
   protein: PROTEIN,
   dairy: DAIRY,
   vegan: {},
+  vegetarian: {},
   starch: STARCH,
 };
 
