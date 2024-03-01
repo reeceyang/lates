@@ -49,7 +49,10 @@ const LateDisplay = ({ late }: LateDisplayProps) => {
         return "All menu items selected";
       }
       const lf = new Intl.ListFormat("en"); // joins strings together grammatically
-      if (excludedDishes?.length > onlyIncludedDishes.length) {
+      if (
+        excludedDishes?.length >= onlyIncludedDishes.length ||
+        excludedDishes.length > 2
+      ) {
         return `Only ${lf.format(onlyIncludedDishes.map((dish) => dish.name))}`;
       } else {
         return `Everything except for ${lf.format(
