@@ -116,7 +116,6 @@ export default function Home() {
           <Stack key={i}>
             <Meal
               meal={meal}
-              editable
               openLateEditor={meal._id === openLateEditorMealId}
             />
           </Stack>
