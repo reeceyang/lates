@@ -54,7 +54,7 @@ const DishDisplay = ({
           <Box
             sx={(theme) => ({
               borderBottom: `0.2rem dotted ${theme.vars.palette.neutral[300]}`,
-              marginBottom: "0.6rem",
+              marginBottom: "0.3rem",
             })}
             flex={1}
           />
