@@ -37,11 +37,8 @@ export const getMealsForDate = query({
       .valueOf();
     return await ctx.db
       .query("meals")
-      .filter((q) =>
-        q.and(
-          q.gte(q.field("datetime"), startOfDay),
-          q.lte(q.field("datetime"), endOfDay)
-        )
+      .withIndex("by_datetime", (q) =>
+        q.gte("datetime", startOfDay).lte("datetime", endOfDay)
       )
       .collect();
   },

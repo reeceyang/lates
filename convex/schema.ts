@@ -9,7 +9,7 @@ export default defineSchema({
     mealId: v.id("meals"),
     name: v.string(),
     tags: v.array(v.string()),
-  }),
+  }).index("by_meal", ["mealId"]),
 
   lates: defineTable({
     dishIds: v.array(v.id("dishes")),
@@ -19,10 +19,10 @@ export default defineSchema({
     description: v.optional(v.string()),
     cancelled: v.optional(v.boolean()),
     fulfilled: v.optional(v.boolean()),
-  }),
+  }).index("by_meal", ["mealId"]),
 
   meals: defineTable({
     datetime: v.float64(),
     name: v.string(),
-  }),
+  }).index("by_datetime", ["datetime"]),
 });

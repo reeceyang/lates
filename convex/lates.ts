@@ -30,7 +30,7 @@ export const getLatesForMeal = query({
   handler: async (ctx, { mealId }) => {
     return await ctx.db
       .query("lates")
-      .filter((q) => q.eq(q.field("mealId"), mealId))
+      .withIndex("by_meal", (q) => q.eq("mealId", mealId))
       .collect();
   },
 });
